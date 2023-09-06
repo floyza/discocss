@@ -69,7 +69,7 @@ else
 fi
 
 perl_options='-i -0pe'
-app_preload_replace="s|  throw new Error\('Preload scripts should not be running in a subframe'\);\n}\n\nlet uncaughtExceptionHandler;\n\nfunction setUncaughtExceptionHandler\(handler\) {\n  uncaughtExceptionHandler = handler;\n}\n\nif \(window.opener === null\) {\n|throw new Error\(\);}let uncaughtExceptionHandler;function setUncaughtExceptionHandler\(handler\){uncaughtExceptionHandler=handler;}if \(window.opener === null\) {try{require\('/tmp/discocss-preload.js'\)\(\)}catch\(e\){console.error\(e\);}\n|"
+app_preload_replace="s|if \(!process.isMainFrame\) {\n  throw new Error\('Preload scripts should not be running in a subframe'\);\n}\nlet uncaughtExceptionHandler;\nfunction setUncaughtExceptionHandler\(handler\) {\n  uncaughtExceptionHandler = handler;\n}\nif \(window.opener === null\) {\n|if\(!process.isMainFrame\){throw new Error\(\);}\nlet uncaughtExceptionHandler;\nfunction setUncaughtExceptionHandler\(h\){uncaughtExceptionHandler=h;}\nif \(window.opener === null\) {\ntry { require\('/tmp/discocss-preload.js'\)\(\) } catch\(e\) { console.error\(e\); } \n|"
 LC_ALL=C perl $perl_options "$app_preload_replace" "$core_asar"
 
 discordBin="$DISCOCSS_DISCORD_BIN"
